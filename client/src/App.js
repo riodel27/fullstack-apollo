@@ -1,71 +1,24 @@
-import React, { Component } from 'react';
-import { Mutation, ApolloConsumer } from 'react-apollo';
-import gql from 'graphql-tag';
+import React from 'react'
+import {BrowserRouter as Router, Route} from 'react-router-dom'
+import 'semantic-ui-css/semantic.min.css'
 
-const LOGIN_USER = gql`
-  mutation login($username: String! $password: String!) {
-    login(username:$username password:$password) {
-			username
-			token
-			email
-		}
-  }
-`;
+import Home from './pages/Home'
+import Login from './pages/Login'
+import Register from './pages/Register'
+import MenuBar from './component/MenuBar'
+
 
 function App(){
 	return (
-		<ApolloConsumer>
-			{client => (
-				<Mutation 
-					mutation={LOGIN_USER}	
-					onCompleted={({ login }) => {
-						console.log('on completed login: ', login)
-          }}
-				>
-					{(login,{data}	) =>	{
-						return <LoginForm login={login}/>
-					}}
-				</Mutation>
-			)}
-		</ApolloConsumer>
+		<Router>
+			<div className="ui container">
+				<MenuBar />
+				<Route exact path = '/' component={Home}/>
+				<Route exact path = '/login' component={Login}/>
+				<Route exact path = '/register' component={Register}/>
+			</div>
+		</Router>
 	)
-}
-
-
-class LoginForm extends Component {
-  state = { username: '' , password:''};
-
-  onChange = event => {
-		const data = {
-			[`${event.target.name}`] : event.target.value
-		}
-	 this.setState(s => (data))
-  };
-
-  onSubmit = event => {
-		event.preventDefault();
-		const username = this.state.username
-		const password = this.state.password
-		this.props.login({ variables: { username, password}});
-  };
-
-  render() {
-    return (
-		<form
-			onSubmit={this.onSubmit}
-		>
-			<label>
-				Name:
-				<input type="text" name="username" onChange={this.onChange}/>
-			</label>
-			<label>
-				Password:
-				<input type="text" name="password" onChange={this.onChange}/>
-			</label>
-				<input type="submit" value="Submit" />
-		</form>
-    );
-  }
 }
 
 export default App;
