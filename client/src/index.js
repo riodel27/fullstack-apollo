@@ -4,8 +4,8 @@ import { HttpLink } from 'apollo-link-http';
 import gql from "graphql-tag";
 import React from 'react';
 import ReactDOM from 'react-dom';
-// import {ApolloProvider} from '@apollo/react-hooks'
-import { ApolloProvider } from 'react-apollo';
+import {ApolloProvider} from '@apollo/react-hooks'
+// import { ApolloProvider } from 'react-apollo';
 import App from './App'
 
 

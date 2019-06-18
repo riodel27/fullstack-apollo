@@ -1,6 +1,6 @@
 import React  from 'react'
 
-import LoginForm from '../component/LoginForm'
+import LoginForm from '../components/LoginForm'
 
 // possible this Login component can be wrap with ApolloConsumer to be able to use
 // the Query or Mutation from Apollo client?
