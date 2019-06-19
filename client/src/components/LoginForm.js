@@ -21,15 +21,15 @@ class LoginForm extends Component {
   render() {
     return (
 				<Form onSubmit={this.onSubmit}>
-				<Form.Field>
-					<label>Name</label>
-					<input type="text" name="username" onChange={this.onChange}/>
-				</Form.Field>
-				<Form.Field>
-					<label>Password</label>
-					<input type="text" name="password" onChange={this.onChange}/>
-				</Form.Field>
-				<Button type='submit' value='submit'>Submit</Button>
+					<Form.Field>
+						<label>Name</label>
+						<input type="text" name="username" onChange={this.onChange}/>
+					</Form.Field>
+					<Form.Field>
+						<label>Password</label>
+						<input type="text" name="password" onChange={this.onChange}/>
+					</Form.Field>
+					<Button type='submit' value='submit'>Submit</Button>
 				</Form>
     );
   }
