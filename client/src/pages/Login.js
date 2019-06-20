@@ -2,8 +2,8 @@ import React, { useState } from 'react'
 import { useMutation } from "@apollo/react-hooks";
 import gql from 'graphql-tag';
 
-import { Button, Form } from 'semantic-ui-react'
-	
+import { Button, Form, Message } from 'semantic-ui-react'
+
 const LOGIN_USER = gql`
   mutation login($username: String! $password: String!) {
     login(username:$username password:$password) {
@@ -15,20 +15,30 @@ const LOGIN_USER = gql`
 
 const Login = () => {
 
-	const [login] = useMutation(LOGIN_USER)
+	const [login, {error,data}] = useMutation(LOGIN_USER)
 	const [username,setUserName] = useState('')
 	const [password,setPassword] = useState('')		
 
 	const onSubmit = async () => {	
-		const response = await login({variables:{
+		login({variables:{
 			username,
 			password
 		}})
-		console.log('response: ' ,response)
 	}
 
+	// error && console.log('error: ', JSON.stringify(error))
+
 	return (
-		<Form onSubmit={onSubmit}>
+		<Form error onSubmit={onSubmit} >
+					{error ? <Message
+      								error
+      								header={error.message}
+     								  content={error.graphQLErrors[0].extensions.code}
+										/>	 
+										:
+										null
+					}
+					{data && <h1>user: {data.login.username}</h1>}
 					<Form.Field>
 						<label>Name</label>
 						<input type="text" name="username" onChange={(e) => setUserName(e.target.value)}/>

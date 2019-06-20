@@ -1,6 +1,6 @@
 todo
 
-1. proper error handling of apollo react hooks
+1. extracting error from useMutation of @apollo/react-hooks - done
 2. proper way on utilizing the token for authentication or security
 3. apollo react proper handling of state. one source (ex: more like redux? maybe the apollo cache)
 4. setup eslint client & server
