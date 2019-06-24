@@ -1,8 +1,74 @@
 import React, { useState } from 'react'
 import { useMutation } from "@apollo/react-hooks";
 import gql from 'graphql-tag';
-
 import { Button, Form, Message } from 'semantic-ui-react'
+
+import {useForm} from '../util/hooks'
+
+const Login = (props) => {
+
+	const [errors,setErrors] = useState({})
+
+	const {onChange,onSubmit,values} = useForm(loginUserCallback, {
+		username:"",
+		password:""
+	})
+
+	const [loginUser,{loading}] = useMutation(LOGIN_USER,{
+		update(_,result){
+			console.log('login result: ',result)
+			props.history.push('/')
+		},
+		onError(err){
+			console.log(err.graphQLErrors[0].extensions.exception.errors)
+			setErrors(err.graphQLErrors[0].extensions.exception.errors)
+		},
+		variables : values
+	})
+
+	function loginUserCallback(){
+		loginUser()
+	}
+
+	return (
+		<div>
+			<Form onSubmit={onSubmit} className={loading ? 'loading' : ''}>
+				<Form.Input 
+					label="Username"
+					placeholder="Username"
+					name="username"
+					value={values.username}
+					onChange={onChange}
+					type= "text"
+					error={errors.username ? true : false}
+				/>
+				<Form.Input 
+					label="Password"
+					placeholder="Password"
+					name="password"
+					value={values.password}
+					onChange={onChange}
+					type= "password"
+					error={errors.password ? true : false}
+				/>
+				<Button type="submit" primary>
+					Login
+				</Button>
+			</Form>
+			{Object.keys(errors).length > 0 && (
+				<div className="ui error message">
+					<ul className="list">
+						{
+							Object.values(errors).map(value => (
+								<li key={value}>{value}</li>
+							))
+						}
+					</ul>
+				</div>
+			)}
+		</div>
+	)
+}
 
 const LOGIN_USER = gql`
   mutation login($username: String! $password: String!) {
@@ -12,44 +78,5 @@ const LOGIN_USER = gql`
 		}
   }
 `;
-
-const Login = () => {
-
-	const [login, {error,data}] = useMutation(LOGIN_USER)
-	const [username,setUserName] = useState('')
-	const [password,setPassword] = useState('')		
-
-	const onSubmit = async () => {	
-		login({variables:{
-			username,
-			password
-		}})
-	}
-
-	// error && console.log('error: ', JSON.stringify(error))
-
-	return (
-		<Form error onSubmit={onSubmit} >
-					{error ? <Message
-      								error
-      								header={error.message}
-     								  content={error.graphQLErrors[0].extensions.code}
-										/>	 
-										:
-										null
-					}
-					{data && <h1>user: {data.login.username}</h1>}
-					<Form.Field>
-						<label>Name</label>
-						<input type="text" name="username" onChange={(e) => setUserName(e.target.value)}/>
-					</Form.Field>
-					<Form.Field>
-						<label>Password</label>
-						<input type="text" name="password" onChange={(e) => setPassword(e.target.value)}/>
-					</Form.Field>
-					<Button type='submit' value='submit'>Submit</Button>
-		</Form>
-	)
-}
 
 export default Login
